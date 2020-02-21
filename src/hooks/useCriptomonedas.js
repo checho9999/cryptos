@@ -1,5 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import styled from '@emotion/styled';
+import PropTypes from 'prop-types';
 
 const Label = styled.label`
     font-family: 'Bebas Neue', cursive;
@@ -23,7 +24,7 @@ const Select = styled.select`
 
 const useCriptomoneda = ( label, stateInicial, opciones ) => {
 
-    console.log(opciones);
+    //console.log(opciones);
 
     //definicion del state de nuestro custom hook
     const [ state, actualizarState ] = useState(stateInicial);
@@ -45,6 +46,12 @@ const useCriptomoneda = ( label, stateInicial, opciones ) => {
 
     //Para retornar el state, la interfaz y la funcion que modifica el state
     return [state, SelectCripto, actualizarState];
+}
+
+useCriptomoneda.propTypes = {
+    label: PropTypes.string.isRequired,
+    stateInicial: PropTypes.string.isRequired,
+    opciones: PropTypes.object.isRequired
 }
 
 export default useCriptomoneda;

@@ -4,6 +4,7 @@ import axios from 'axios'
 import useMoneda from '../hooks/useMoneda'
 import useCriptomonedas from '../hooks/useCriptomonedas'
 import Error from './Error'
+import PropTypes from 'prop-types';
 
 const Boton = styled.input`
     margin-top: 20px;
@@ -23,12 +24,13 @@ const Boton = styled.input`
     }
 `
 
-const Formulario = () => {
+const Formulario = ( { guardarMoneda, guardarCriptomoneda } ) => {
 
     //useState del Listado de croptomonedas
     const [ listacripto, guardarCriptomonedas ] = useState([]);
     const [ error, guardarError ] = useState(false);
 
+    //para el select del useMoneda
     const MONEDAS = [
         { codigo: 'USD', nombre: 'Dolar de Estados Unidos' },
         { codigo: 'MXN', nombre: 'Peso Mexicano' },
@@ -37,13 +39,13 @@ const Formulario = () => {
     ];
 
     //Importamos el custom hook useMoneda (los nombres pueden diferir aunque hay que tener en cuetna el orden)
-    const [ moneda, SelectMonedas] = useMoneda('Elige tu moneda', '', MONEDAS); //SelecMonedas es la interfaz
+    const [ moneda, SelectMonedas] = useMoneda('Elige tu moneda', '', MONEDAS); //SelectMonedas es la interfaz
     //const [ moneda, SelectMonedas, actualizarState ] = useMoneda('Elige tu moneda', '', MONEDAS); /* No es necesario actualizar el state, ya que se actualiza dentro del useMoneda */
 
      //Importamos el custom hook useCriptomonedas (los nombres pueden diferir aunque hay que tener en cuetna el orden)
     const [ criptomoneda, SelectCripto] = useCriptomonedas('Elige tu criptomoneda', '', listacripto); //SelectCrypto es la interfaz
     
-    //Se llama a la API de Criptomonedas
+    //Se llama a la API de Criptomonedas (para el select de useCriptomonedas)
     useEffect(() => {
         const consultarAPI = async () => {
             const url = 'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=USD';
@@ -69,8 +71,8 @@ const Formulario = () => {
     
             // pasar los datos al componente principal
             guardarError(false);
-            //guardarMoneda(moneda);
-            //guardarCriptomoneda(criptomoneda);
+            guardarMoneda(moneda);
+            guardarCriptomoneda(criptomoneda);
         }
 
     return (  
@@ -92,4 +94,9 @@ const Formulario = () => {
     );
 }
  
+Formulario.propTypes = {    
+    guardarMoneda : PropTypes.func.isRequired,
+    guardarCriptomoneda : PropTypes.func.isRequired,
+}
+
 export default Formulario;
